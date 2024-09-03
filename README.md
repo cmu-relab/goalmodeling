@@ -12,7 +12,7 @@ The `goalmodeling` Python package presents the concepts as objects. Below are th
 * Python 3.10.5 or higher.
 
 ### Download
-Download the latest goalmodeling wheel available under [Releases](releases/).
+Download the latest goalmodeling wheel available under Releases.
 
 ### Install
 Open a terminal and change the current working directory to where you downloaded the `goalmodeling` wheel file. Then install this wheel using pip3, as shown below.
