@@ -52,11 +52,11 @@ Refinement(
     annotation: str = '')
 ```
 
-| Argument | Description |
-|---------|----------|
-| `complete` | Use `True` for a complete refinement, to produce a filled-in circle.|
-|`children` | List of children forming an AND-relation. A child can be a goal, an obstruction, or a domain property. |
-|`annotation`| Optionally label the refinement in the graph.
+| Argument     | Description                                                                                            |
+|--------------|--------------------------------------------------------------------------------------------------------|
+| `complete`   | Use `True` for a complete refinement, to produce a filled-in circle.                                   |
+| `children`   | List of children forming an AND-relation. A child can be a goal, an obstruction, or a domain property. |
+| `annotation` | Optionally label the refinement in the graph.                                                          |
 
 #### Performance links
 
@@ -79,11 +79,11 @@ Agent(
     annotation: str = '')
 ```
 
-| Argument | Description |
-|---------|----------|
-| `name` | The name of the agent.|
-|`agent_type` | The agent must either be environment agent or software agent, i.e., `AgentType.ENVIRONMENT_AGENT` or `AgentType.SOFTWARE_AGENT`, respectively.|
-|`annotation`| Optionally label the agent in the graph.
+| Argument     | Description                                                                                                                                    |
+|--------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `name`       | The name of the agent.                                                                                                                         |
+| `agent_type` | The agent must either be environment agent or software agent, i.e., `AgentType.ENVIRONMENT_AGENT` or `AgentType.SOFTWARE_AGENT`, respectively. |
+| `annotation` | Optionally label the agent in the graph.                                                                                                       |
 
 Example:
 ```python
@@ -95,18 +95,17 @@ speed_sensor = Agent('SpeedSensor', AgentType.SOFTWARE_AGENT)
 The agent performing the operation results in satisfying or satisficing the goal.
 
 ```python
-Operation
-    (name: str,
+Operation(
+    name: str,
     category: OperationCategory,
     annotation: str = '')
 ```
 
-| Argument | Description |
-|---------|----------|
-| `name` | The name of the operation. Markdown formatting is acceptable.|
-|`category` | The operation must either be environment operation or a software to be operation, i.e., `OperationCategory.ENVIRONMENT_OPERATION` or `OperationCategory.SOFTWARE_TO_BE_OPERATION`, respectively.|
-|`annotation`| Optionally label the operation.
-
+| Argument     | Description                                                                                                                                                                                      |
+|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `name`       | The name of the operation. HTML formatting is acceptable.                                                                                                                                        |
+| `category`   | The operation must either be environment operation or a software to be operation, i.e., `OperationCategory.ENVIRONMENT_OPERATION` or `OperationCategory.SOFTWARE_TO_BE_OPERATION`, respectively. |
+| `annotation` | Optionally label the operation.                                                                                                                                                                  |
 
 #### Domain properties
 
@@ -119,32 +118,32 @@ DomainProperty(
     annotation: str = '')
 ```
 
-| Argument | Description |
-|---------|----------|
-| `name` | The name of the domain property. Markdown formatting is acceptable.|
-|`leaf` | Using `True` will bold the border of the domain property. |
-|`annotation`| Optionally label the domain property.
+| Argument     | Description                                                                 |
+|--------------|-----------------------------------------------------------------------------|
+| `name`       | The name of the domain property. HTML formatting is acceptable.             |
+| `leaf`       | Using `True` will bold the border of the domain property.                   |
+| `annotation` | Optionally label the domain property.                                       |
 
 #### Goals
 
 Instantiate `AchieveGoal`, `AvoidGoal`, `MaintainGoal`, `CeaseGoal`, or `SoftGoal` instead of the more basic `Goal` or `BehavioralGoal` constructs. All goals have the following arguments.
 
-| Argument | Description |
-|---------|----------|
-| `name` | The name of the goal. Markdown formatting is acceptable.|
+| Argument | Description                                                                                                                                                                                        |
+|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `name` | The name of the goal. HTML formatting is acceptable.                                                                                                                                               |
 |`performs` | An optional list of performance links representing agents and operations that cause the satisfaction or satisficing of this goal. Use `None` when not applicable, for example, for non-leaf goals. |
-|`refinements` | A `list` of `Refinement` constructs producing an OR-relation among the members, where each `Refinement` represents AND-relationships, i.e., disjunctive normal form. Use `None` when a leaf goal. |
-|`leaf`| If `True`, produce the parallelogram with a thick border. A thick border indicates a leaf goal.|
-|`annotation`| Optionally label the goal. |
+|`refinements` | A `list` of `Refinement` constructs producing an OR-relation among the members, where each `Refinement` represents AND-relationships, i.e., disjunctive normal form. Use `None` when a leaf goal.  |
+|`leaf`| If `True`, produce the parallelogram with a thick border. A thick border indicates a leaf goal.                                                                                                    |
+|`annotation`| Optionally label the goal.                                                                                                                                                                         |
 
 An example showing refinement of achievement goals follows.
 
 ```python
 achieve_copyborrowed_if_available = AchieveGoal(
-    name="CopyBorrowed **If** Available")
+    name="`CopyBorrowed <b>If</b> Available`")
 
 achieve_copyduesoonforcheckout_if_not_available = AchieveGoal(
-    name="CopyDueSoonForCheckOut **If Not** Available")
+    name="`CopyDueSoonForCheckOut <b>If Not</b> Available`")
 
 achieve_book_request_satisfied = AchieveGoal(
     name="BookRequestSatisfied",
@@ -228,7 +227,6 @@ MaintainGoal(
     refinements: list[Refinement] = None,
     leaf: bool = False,
     annotation: str = '')
-)
 ```
 
 ##### Cease goals
@@ -250,7 +248,6 @@ SoftGoal(
     refinements: list[Refinement] = None,
     leaf: bool = False,
     annotation: str = '')
-)
 ```
 
 #### Conflict links
@@ -261,7 +258,6 @@ Represent a conflict between two goals, `goal1` and `goal2`, with a conflict lin
 ConflictLink(
     goal1: Goal,
     goal2: Goal)
-)
 ```
 
 
@@ -274,14 +270,13 @@ Obstacle(
     name: str,
     refinements: list[Refinement] = None,
     annotation: str = '')
-)
 ```
 
-| Argument | Description |
-|---------|----------|
-| `name` | The name of the obstacle. Markdown formatting is acceptable.|
+| Argument | Description                                                                                                                                                                                           |
+|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `name` | The name of the obstacle. HTML formatting is acceptable.                                                                                                                                              |
 |`refinements` | A `list` of `Refinement` constructs producing an OR-relation among the members, where each `Refinement` represents an AND-relationship, i.e., disjunctive normal form. Use `None` when not applicable. |
-|`annotation`| Optionally label the obstacle. |
+|`annotation`| Optionally label the obstacle.                                                                                                                                                                        |
 
 #### Obstruction links
 
@@ -361,7 +356,7 @@ CopyDueSoonForCheckOut[/"`Achieve[CopyDueSoonForCheckOut **If Not** Available]`"
 
 ### Preliminaries
 1. Use `flowchart BT` as the starting line for the diagram.
-1. The definition supports markdown, which can be used to emphasize particular text inside double-quotes. For example, ``GoalName[/"`GoalName **is** bold`"/]``.
+1. The definition supports HTML or Markdown, which can be used to emphasize particular text inside double-quotes. For example, ``GoalName[/"`GoalName **is** bold`"/]``.
 1. Suffix the following styles to the definition. The `bold` style is used for leaf goals. The `filled` style is used for complete refinement. And the `nostroke` style is used for annotations.
 
 ```

@@ -133,7 +133,7 @@ class Vertex:
 
     def to_tree(self):
         if self.annotation:
-            return (f'annotation{self.get_node_id()}["`{self.annotation}`"]:::nostroke'
+            return (f'annotation{self.get_node_id()}["{self.annotation}"]:::stroke'
                     f' -.- {self.get_node_id()}\n')
         return ""
 
@@ -154,7 +154,7 @@ class Edge:
 
 class Operation(Vertex):
     """
-    An operation that an agent performs resulting in satisfying a goal. TBD: satisficing, as well?
+    An operation that an agent performs resulting in satisfying or satisficing a goal.
     """
     def __init__(self, name: str, category: OperationCategory, annotation: str = ""):
         """
@@ -168,7 +168,7 @@ class Operation(Vertex):
         self.category = category
 
     def to_string(self):
-        return f'{self.get_node_id()}' + "([`" + self.name + "`])"
+        return f'{self.get_node_id()}(["{self.name}"])'
 
 
 class Agent(Vertex):
@@ -248,7 +248,7 @@ class DomainProperty(Vertex):
         Return the domain property represented as a trapezoid in Mermaid.
         :return str: The Mermaid js diagram definition for the domain property as a trapezoid.
         """
-        return f'{self.get_node_id()}[/"`{self.name}`"\\]'
+        return f'{self.get_node_id()}[/"{self.name}"\\]'
 
 
 class Goal(Vertex):
@@ -273,7 +273,7 @@ class Goal(Vertex):
         Return the goal represented as a right-leaning parallelogram in Mermaid.
         :return str: The Mermaid js diagram definition for the goal.
         """
-        return f'{self.get_node_id()}[/"`{self.name}`"/]'  # [/"name"/]
+        return f'{self.get_node_id()}[/"{self.name}"/]'  # [/"name"/]
 
     def to_tree(self):
         """
@@ -346,7 +346,7 @@ class Obstacle(Vertex):
         Return the obstacle represented as a left-leaning parallelogram in Mermaid.
         :return str: The Mermaid js diagram definition for the obstacle.
         """
-        return f'{self.get_node_id()}[\\"`{self.name}`"\\]'
+        return f'{self.get_node_id()}[\\"{self.name}"\\]'
 
     def to_tree(self):
         """
@@ -480,7 +480,7 @@ class AchieveGoal(BehavioralGoal):
         """
         Return the achievement goal represented as a right-leaning parallelogram in Mermaid.
         """
-        return f'{self.get_node_id()}[/"`Achieve[{self.name}]`"/]'  # [/Achieve[name]/]
+        return f'{self.get_node_id()}[/"Achieve[{self.name}]"/]'  # [/Achieve[name]/]
 
 
 class CeaseGoal(AchieveGoal):
@@ -508,7 +508,7 @@ class CeaseGoal(AchieveGoal):
         """
         Return the cease goal represented as a right-leaning parallelogram in Mermaid.
         """
-        return f'{self.get_node_id()}[/"`Cease[{self.name}]`"/]'  # [/Cease[name]/]
+        return f'{self.get_node_id()}[/"Cease[{self.name}]"/]'  # [/Cease[name]/]
 
 
 class MaintainGoal(BehavioralGoal):
@@ -536,7 +536,7 @@ class MaintainGoal(BehavioralGoal):
         """
         Return the maintenance goal represented as a right-leaning parallelogram in Mermaid.
         """
-        return f'{self.get_node_id()}[/"`Maintain[{self.name}]`"/]'  # [/Maintain[name]/]
+        return f'{self.get_node_id()}[/"Maintain[{self.name}]"/]'  # [/Maintain[name]/]
 
 
 class AvoidGoal(MaintainGoal):
@@ -564,7 +564,7 @@ class AvoidGoal(MaintainGoal):
         """
         Return the avoid goal represented as a right-leaning parallelogram in Mermaid.
         """
-        return f'{self.get_node_id()}[/"`Avoid[{self.name}]`"/]'  # [/Avoid[name]/]
+        return f'{self.get_node_id()}[/"Avoid[{self.name}]"/]'  # [/Avoid[name]/]
 
 
 class SoftGoal(Goal):
@@ -604,15 +604,21 @@ def diagram_teardown():
     return """
 classDef bold stroke-width:3,stroke:#000
 classDef filled fill:#000;
-classDef nostroke stroke-width:0,fill-opacity:0.0\n
+classDef nostroke stroke-width:0,fill-opacity:0.0
+classDef stroke stroke-dasharray: 5 5,fill-opacity:0.0,text-align:left\n
     """
 
 
-def generate_pako_link(text: str, mode: str = "view", config: dict = {"theme": "neutral"}):
+def generate_pako_link(
+        text: str,
+        mode: str = "view",
+        host: str = "https://mermaid.live",
+        config: dict = {"theme": "neutral"}):
     """
     Generate a Mermaid pako link for the given graph represented as text.
     :param str text:
     :param str mode: "view" or "edit"
+    :param str host: The host to use for the pako link, default is mermaid.js       live
     :param dict config: Additional configuration. The field theme can be
      "default", "neutral", "forest", "dark", etc.
     The default is neutral and may be best for refinement graphs.
@@ -627,7 +633,7 @@ def generate_pako_link(text: str, mode: str = "view", config: dict = {"theme": "
     compress = zlib.compressobj(9, zlib.DEFLATED, 15, 8, zlib.Z_DEFAULT_STRATEGY)
     compressed = compress.compress(output.encode('utf-8')) + compress.flush()
     pako = base64.b64encode(compressed, b"-_").decode("utf-8")
-    url = f"https://mermaid.live/{mode}#pako:{pako}"
+    url = f"{host}/{mode}#pako:{pako}"
     return url
 
 
