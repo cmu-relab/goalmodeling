@@ -40,6 +40,7 @@ class Processor:
                     self.data.append([role, text])
 
             segment0 = segment1
+            
 
     def reassign_roles(self):
         t_count = {}
@@ -63,19 +64,33 @@ def main():
     parser = argparse.ArgumentParser(
         prog="aggregator",
         description="Aggregate speaker turns in a transcript",
-        epilog="For example, python3 aggregator.py --transcript transcript.txt --output aggregated.csv"
+        epilog="For example, python3 aggregator.py --input transcript.vtt --output transcript-turn-based.csv"
     )
 
-    parser.add_argument('--transcript', type=str, help='Path to transcript file', required=True)
-    parser.add_argument('--output', type=str, help='Path to output file', required=True)
+    parser.add_argument('--input', type=str, help='Path to unprocessed transcript file', required=True)
+    parser.add_argument('--output', type=str, help='Path to processed transcript file', required=True)
+    parser.add_argument('--assign-roles', action='store_true', default=False)
 
     args = parser.parse_args()
 
-    processor = Processor()
+    # read text from transcript
+    text = open(args.input, 'r', encoding='utf-8').read()
+    print('\nRead transcript length: %i char(s)' % len(text))
 
-    text = open(args.transcript, 'r', encoding='utf-8').read()
+    # remove the header
+    if not text.startswith('WEBVTT\n\n'):
+        print('Error: Missing WEBVTT header')
+        exit()
+    else:
+        text = text[len('WEBVTT\n\n'):]
+        
+    processor = Processor()
     processor.process(text)
-    processor.reassign_roles()
+    print('Processed %i speaker turns' % len(processor.data))
+
+    
+    if args.assign_roles:
+        processor.reassign_roles()
 
     with open(args.output, 'w', encoding='utf-8') as f:
         writer = csv.writer(f)
