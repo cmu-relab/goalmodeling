@@ -15,10 +15,10 @@ The `goalmodeling` Python package presents the concepts as objects. Below are th
 Download the latest goalmodeling wheel available under Releases.
 
 ### Install
-Open a terminal and change the current working directory to where you downloaded the `goalmodeling` wheel file. Then install this wheel using pip3, as shown below.
+Open a terminal and change the current working directory to where you downloaded the `goalmodeling` wheel file. Then install the most recent wheel for goalmodeling using pip3. A example is shown below for release 0.1.2 of goalmodeling.
 
 ```
-pip3 install --no-index goalmodeling-0.1.1-py3-none-any.whl
+pip3 install --no-index goalmodeling-0.1.2-py3-none-any.whl
 ``` 
 
 ### Getting started
