@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "goalmodeling"
-version = "0.1.2"
+version = "0.1.3"
 description = "\"Library to generate refinement graphs for goal modeling with Mermaid\""
 authors = ["Ateeq Sharfuddin <ateeq@cmu.edu>"]
 license = "LICENSE"
@@ -16,5 +16,5 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [project.urls]
-Homepage = "https://www.github.com/farfella/goalmodeling"
-Issues = "https://www.github.com/farfella/goalmodeling/issues"
+Homepage = "https://www.github.com/cmu-relab/goalmodeling"
+Issues = "https://www.github.com/cmu-relab/goalmodeling/issues"

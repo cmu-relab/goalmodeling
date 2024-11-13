@@ -283,17 +283,21 @@ class Goal(Vertex):
         node_diagram = self.to_string()
         result = super().to_tree()
 
+        if len(self.disjunctions) == 0 and len(self.performs) == 0:
+            return result + "\n"
+
         for disjunction in self.disjunctions:
             current_disjunction = disjunction.get_node_id()
             current_disjunction_diagram = f'{current_disjunction}((" "))'
             filled = ":::filled" if disjunction.complete else ""
+            result += disjunction.to_tree()
 
             if disjunction.children[0].vertex_type == VertexType.NODE_TYPE_OBSTACLE:
                 arrowhead = "x"
             else:
                 arrowhead = ">"
 
-            link_to_parent = f"{current_disjunction_diagram}{filled} ==={arrowhead} {node_diagram}"
+            link_to_parent = f"{current_disjunction_diagram}{filled} ==={arrowhead} {self.get_node_id()}"
             result += link_to_parent
 
             result += "\n"
@@ -319,6 +323,8 @@ class Goal(Vertex):
                 result += perform_link
                 result += "\n"
                 result += perform.agent.to_tree()
+
+        result += node_diagram + "\n"
 
         return result
 
@@ -397,7 +403,9 @@ class ConflictLink(Edge):
         """
         Return the conflict link represented as a dashed line with a lightning in Mermaid.
         """
-        return f'{self.goal1.get_node_id()} --"#128498;"--- {self.goal2.get_node_id()}'
+        return (f'{self.goal1.get_node_id()} --"#128498;"--- {self.goal2.get_node_id()}\n'
+                f'{self.goal2.to_string()}\n'
+                f'{self.goal1.to_string()}\n')
 
 
 class ObstructionLink(Edge):
@@ -418,7 +426,7 @@ class ObstructionLink(Edge):
         """
         Return the obstruction link represented as a dashed line with a cross in Mermaid.
         """
-        return f'{self.obstacle.get_node_id()} ---x {self.goal.get_node_id()}'
+        return f'{self.obstacle.get_node_id()} ---x {self.goal.get_node_id()}\n{self.obstacle.to_string()}\n'
 
 
 class ResolutionLink(Edge):
@@ -439,7 +447,9 @@ class ResolutionLink(Edge):
         """
         Return the resolution link represented as a dashed line with a cross in Mermaid.
         """
-        return f'{self.goal.get_node_id()} ---x {self.obstacle.get_node_id()}'
+        return (f'{self.goal.get_node_id()} ---x {self.obstacle.get_node_id()}\n'
+                f'{self.goal.to_string()}\n'
+                f'{self.obstacle.to_string()}\n')
 
 
 class BehavioralGoal(Goal):
