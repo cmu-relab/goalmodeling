@@ -139,11 +139,12 @@ Instantiate `AchieveGoal`, `AvoidGoal`, `MaintainGoal`, `CeaseGoal`, or `SoftGoa
 An example showing refinement of achievement goals follows.
 
 ```python
+from goalmodeling.schema import *
 achieve_copyborrowed_if_available = AchieveGoal(
-    name="`CopyBorrowed <b>If</b> Available`")
+    name="CopyBorrowed <b>If</b> Available")
 
 achieve_copyduesoonforcheckout_if_not_available = AchieveGoal(
-    name="`CopyDueSoonForCheckOut <b>If Not</b> Available`")
+    name="CopyDueSoonForCheckOut <b>If Not</b> Available")
 
 achieve_book_request_satisfied = AchieveGoal(
     name="BookRequestSatisfied",
@@ -160,39 +161,41 @@ output = generate_graph([achieve_book_request_satisfied], [])
 print(output)
 
 config = {"theme": "default", "themeVariables": {"fontFamily": "Helvetica"}}
-link = generate_pako_link(output, "edit", config)
+link = generate_pako_link(output, "edit", config=config)
 print(link)
 ```
 
 The produced Mermaid diagram definition output is:
 ```
 flowchart BT
-node3((" ")) ===> node4[/"`Achieve[BookRequestSatisfied]`"/]
-node1[/"`Achieve[CopyBorrowed **If** Available]`"/] --- node3
-node2[/"`Achieve[CopyDueSoonForCheckOut **If Not** Available]`"/] --- node3
+node2((" ")) ===> node3[/"Achieve[BookRequestSatisfied]"/]
+node0[/"Achieve[CopyBorrowed <b>If</b> Available]"/] --- node2
+node1[/"Achieve[CopyDueSoonForCheckOut <b>If Not</b> Available]"/] --- node2
 
 
 classDef bold stroke-width:3,stroke:#000
 classDef filled fill:#000;
 classDef nostroke stroke-width:0,fill-opacity:0.0
+classDef stroke stroke-dasharray: 5 5,fill-opacity:0.0,text-align:left
 ```
 
 The produced Mermaid link is:
 
-> https://mermaid.live/edit#pako:eNp9kF9rwjAUxb_KJXvRYmembx0O_INsLxvMsRcrGJMbGpr2ujStiPjd17QvymDJQ8g55_5uci9MkkKWANOWTjITzsPiKy3LVp0MBimDlA2HMJvNXiBo0-04Zfu5zAw2uF0Q5Z_4U2PlN8KbShtUu33KxruewO_SSzqeF-QcnVBBFL3pKIJ5I4wVB4t9GcRx3PWZ9ICnP4BVjRuick1umaHMP2rfoeCd_P-4sKUVVbVCDQeyCirvKMf4ZJTPkumovyYPnPObpDbWts8NR2c933gl9TX3JD4K4ZiOQhp_TvgjD62hXWwErEBXCKPaiV-Yz7DoZq9Qi9r64Hfat3Am_KLqYppKvxaFseeQfUXboDdSsOv1-gt-Q5b7
+> https://mermaid.live/edit#pako:eNqFUTtvwjAQ_iuWu4CUlBTEkgISD6F2aaVSdSEMTnxuLJwcdS6hEeK_N06W0A61B-u-l-27C09QAg8ZVwbPSSossdV7lOcNOh4MIs4iPhyy-Xy-YA6b7EcRXyaphgr2K8TjG3yVUNBOkC6UBnmI-OjQ-YO-do2neoXW4hkkm8WLZzUbxQu2rIQ2IjbQ-pjv--014y7h4XfCpoQdYr5Fu04hOb6W1GWxF6R_8txOjCiKDSgWo5GsIItH8M9aUhpOvK4M74Ig6CmVNqZ5sTta6rHH5dh5bpMCz4l9PIlEUx0G9_24W4MURdNxK-qQTdn0j88j-CZfGP2ZhwYUuS-wZnGP8QxsJrRsJnfhlELWzlCCEqUhx7fYh7DaNaNoZQpz2opMm9ppn8BUQDoR_Hq9_gDrorE3
 
 
 The Mermaid graph is:
 ```mermaid
 flowchart BT
-node3((" ")) ===> node4[/"`Achieve[BookRequestSatisfied]`"/]
-node1[/"`Achieve[CopyBorrowed **If** Available]`"/] --- node3
-node2[/"`Achieve[CopyDueSoonForCheckOut **If Not** Available]`"/] --- node3
+node2((" ")) ===> node3[/"Achieve[BookRequestSatisfied]"/]
+node0[/"Achieve[CopyBorrowed <b>If</b> Available]"/] --- node2
+node1[/"Achieve[CopyDueSoonForCheckOut <b>If Not</b> Available]"/] --- node2
 
 
 classDef bold stroke-width:3,stroke:#000
 classDef filled fill:#000;
 classDef nostroke stroke-width:0,fill-opacity:0.0
+classDef stroke stroke-dasharray: 5 5,fill-opacity:0.0,text-align:left
 ```
 
 ##### Achievement goals
@@ -322,6 +325,7 @@ Use `generate_pako_link` to generate a Mermaid link from the diagram definition 
 generate_pako_link(
     text: str,
     mode: str = "view",
+    host: str = "https://mermaid.live",
     config: dict = {"theme": "neutral"}) -> str
 ```
 
@@ -329,6 +333,7 @@ generate_pako_link(
 |---------|----------|
 | `text` | The diagram definition produced by `generate_graph`. |
 | `mode` | Create a `"view"` link or `"edit"` link.|
+| `host` | If you want to use another instance of Mermaid. |
 | `config` | Additional Mermaid configuration. The `theme` field can be "default", "neutral", "forest", "dark", etc. Use the `themeVariables` field for additional configuration, for example, to change to a font containing lightning bolt (see [below](#lightning)). |
 
 
@@ -340,17 +345,17 @@ The flowchart diagram in Mermaid can be used to represent refinement graphs. The
 A flowchart definition in Mermaid for a simple refinement graph is shown below.
 ```
 flowchart BT
-refinement((" ")) ===> BookRequestSatisfied[/"`Achieve[BookRequestSatisfied]`"/]
-CopyBorrowed[/"`Achieve[CopyBorrowed **If** Available]`"/] --- refinement
-CopyDueSoonForCheckOut[/"`Achieve[CopyDueSoonForCheckOut **If Not** Available]`"/] --- refinement
+refinement((" ")) ===> BookRequestSatisfied[/"Achieve[BookRequestSatisfied]"/]
+CopyBorrowed[/"Achieve[CopyBorrowed <b>If</b> Available]"/] --- refinement
+CopyDueSoonForCheckOut[/"Achieve[CopyDueSoonForCheckOut <b>If Not</b> Available]"/] --- refinement
 ```
 
 This produces the following diagram.
 ```mermaid
 flowchart BT
-refinement((" ")) ===> BookRequestSatisfied[/"`Achieve[BookRequestSatisfied]`"/]
-CopyBorrowed[/"`Achieve[CopyBorrowed **If** Available]`"/] --- refinement
-CopyDueSoonForCheckOut[/"`Achieve[CopyDueSoonForCheckOut **If Not** Available]`"/] --- refinement
+refinement((" ")) ===> BookRequestSatisfied[/"Achieve[BookRequestSatisfied]"/]
+CopyBorrowed[/"Achieve[CopyBorrowed <b>If</b> Available]"/] --- refinement
+CopyDueSoonForCheckOut[/"Achieve[CopyDueSoonForCheckOut <b>If Not</b> Available]"/] --- refinement
 ```
 
 
@@ -421,12 +426,12 @@ Annotations are represented as rectangles with a `nostroke` style: `Annotation["
 ```
 flowchart BT
 CB_A((" ")) ===> A[/"Maintain[DoorsClosedWhileMoving]"/]
-B[/"`Moving **Iff** NonZeroSpeed`"\]:::bold --- CB_A
+B[/"Moving <b>Iff</b> NonZeroSpeed"\]:::bold --- CB_A
 DEF_C((" ")):::filled ===> C[/"Maintain[DoorsClosedWhileNonZeroSpeed]"/] --- CB_A
 
 D[/"MeasureSpeed=PhysicalSpeed"/]:::bold --- DEF_C
-E[/"`Maintain[DoorsStateClosed **If** NonZeroMesauredSpeed]`"/]:::bold ---DEF_C
-F[/"`DoorsClosed **Iff** DoorsStateClosed`"/]:::bold --- DEF_C
+E[/"Maintain[DoorsStateClosed <b>If</b> NonZeroMesauredSpeed]"/]:::bold ---DEF_C
+F[/"DoorsClosed <b>Iff</b> DoorsStateClosed"/]:::bold --- DEF_C
 
 G{{fa:fa-person SpeedSensor}} --- G_D((" ")) --- D
 H{{TrainController}} --- H_E((" ")) --- E
@@ -446,12 +451,12 @@ This produces the following diagram.
 ```mermaid
 flowchart BT
 CB_A((" ")) ===> A[/"Maintain[DoorsClosedWhileMoving]"/]
-B[/"`Moving **Iff** NonZeroSpeed`"\]:::bold --- CB_A
+B[/"Moving <b>Iff</b> NonZeroSpeed"\]:::bold --- CB_A
 DEF_C((" ")):::filled ===> C[/"Maintain[DoorsClosedWhileNonZeroSpeed]"/] --- CB_A
 
 D[/"MeasureSpeed=PhysicalSpeed"/]:::bold --- DEF_C
-E[/"`Maintain[DoorsStateClosed **If** NonZeroMesauredSpeed]`"/]:::bold ---DEF_C
-F[/"`DoorsClosed **Iff** DoorsStateClosed`"/]:::bold --- DEF_C
+E[/"Maintain[DoorsStateClosed <b>If</b> NonZeroMesauredSpeed]"/]:::bold ---DEF_C
+F[/"DoorsClosed <b>Iff</b> DoorsStateClosed"/]:::bold --- DEF_C
 
 G{{fa:fa-person SpeedSensor}} --- G_D((" ")) --- D
 H{{TrainController}} --- H_E((" ")) --- E
