@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "goalmodeling"
-version = "0.1.4"
+version = "0.1.5"
 description = "\"Library to generate refinement graphs for goal modeling with Mermaid\""
 authors = ["Ateeq Sharfuddin <ateeq@cmu.edu>"]
 license = "LICENSE"
