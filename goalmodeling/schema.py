@@ -287,14 +287,9 @@ class Goal(Vertex):
         """
         if self.node_id in visited:
             return ""
-        else:
-            visited.add(self.node_id)
 
         node_diagram = self.to_string()
         result = super().to_tree(visited)
-
-        if len(self.disjunctions) == 0 and len(self.performs) == 0:
-            return result + "\n"
 
         for disjunction in self.disjunctions:
             current_disjunction = disjunction.get_node_id()
@@ -371,8 +366,6 @@ class Obstacle(Vertex):
         """
         if self.node_id in visited:
             return ""
-        else:
-            visited.add(self.node_id)
 
         node_diagram = self.to_string()
         result = super().to_tree(visited)
