@@ -131,7 +131,12 @@ class Vertex:
         """
         return f"node{self.node_id}"
 
-    def to_tree(self):
+    def to_tree(self, visited=set()):
+        if self.node_id in visited:
+            return ""
+        else:
+            visited.add(self.node_id)
+
         if self.annotation:
             return (f'annotation{self.get_node_id()}["{self.annotation}"]:::stroke'
                     f' -.- {self.get_node_id()}\n')
@@ -275,13 +280,18 @@ class Goal(Vertex):
         """
         return f'{self.get_node_id()}[/"{self.name}"/]'  # [/"name"/]
 
-    def to_tree(self):
+    def to_tree(self, visited=set()):
         """
         Generate the Mermaid js diagram definition for the refinement graph with this goal as root.
         :return str: The Mermaid diagram definition.
         """
+        if self.node_id in visited:
+            return ""
+        else:
+            visited.add(self.node_id)
+
         node_diagram = self.to_string()
-        result = super().to_tree()
+        result = super().to_tree(visited)
 
         if len(self.disjunctions) == 0 and len(self.performs) == 0:
             return result + "\n"
@@ -290,7 +300,7 @@ class Goal(Vertex):
             current_disjunction = disjunction.get_node_id()
             current_disjunction_diagram = f'{current_disjunction}((" "))'
             filled = ":::filled" if disjunction.complete else ""
-            result += disjunction.to_tree()
+            result += disjunction.to_tree(visited)
 
             if disjunction.children[0].vertex_type == VertexType.NODE_TYPE_OBSTACLE:
                 arrowhead = "x"
@@ -309,7 +319,7 @@ class Goal(Vertex):
                 result += link_to_refinement
                 result += "\n"
 
-                result += child.to_tree()
+                result += child.to_tree(visited)
 
             result += "\n"
 
@@ -322,7 +332,7 @@ class Goal(Vertex):
                 perform_link = f'{perform.operation.to_string()} --- {perform.agent.get_node_id()}'
                 result += perform_link
                 result += "\n"
-                result += perform.agent.to_tree()
+                result += perform.agent.to_tree(visited)
 
         result += node_diagram + "\n"
 
@@ -354,13 +364,18 @@ class Obstacle(Vertex):
         """
         return f'{self.get_node_id()}[\\"{self.name}"\\]'
 
-    def to_tree(self):
+    def to_tree(self, visited=set()):
         """
         Generate the Mermaid js diagram definition for the refinement graph with this obstacle as root.
         :return str: The Mermaid diagram definition.
         """
+        if self.node_id in visited:
+            return ""
+        else:
+            visited.add(self.node_id)
+
         node_diagram = self.to_string()
-        result = super().to_tree()
+        result = super().to_tree(visited)
 
         for disjunction in self.refinements:
             current_disjunction = disjunction.get_node_id()
@@ -378,7 +393,7 @@ class Obstacle(Vertex):
                 result += link_to_refinement
                 result += "\n"
 
-                result += child.to_tree()
+                result += child.to_tree(visited)
 
             result += "\n"
 
