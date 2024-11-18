@@ -307,13 +307,13 @@ Use `generate_graph` to output a Mermaid diagram definition for the refinement g
 ```
 generate_graph(
     goals: list[Goal],
-    links: list[ObstructionLink or ConflictLink] = None) -> str
+    links: list[ObstructionLink or ConflictLink or ResolutionLink] = None) -> str
 ```
 
 | Argument | Description |
 |---------|----------|
 | `goals` | A list of root-level goals. Often you may have just one root-level goal.|
-|`links` | An optional list of obstruction links or conflict links. |
+|`links` | An optional list of obstruction links, conflict links, or resolution links. |
 
 
 

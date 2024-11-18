@@ -434,7 +434,8 @@ class ObstructionLink(Edge):
         """
         Return the obstruction link represented as a dashed line with a cross in Mermaid.
         """
-        return f'{self.obstacle.get_node_id()} ---x {self.goal.get_node_id()}\n{self.obstacle.to_string()}\n'
+        return (f'{self.obstacle.get_node_id()} ---x {self.goal.get_node_id()}\n'
+                f'{self.obstacle.to_string()}\n')
 
 
 class ResolutionLink(Edge):
@@ -655,21 +656,28 @@ def generate_pako_link(
     return url
 
 
-def generate_graph(goals: list[Goal], links: list[ObstructionLink or ConflictLink] = None):
+def generate_graph(goals: list[Goal], links: list[ObstructionLink or ConflictLink or ResolutionLink] = None):
     """
     Generate a Mermaid js diagram for the given goals and obstructions.
     :param list[Goal] goals: The goals in the graph.
-    :param list[ObstructionLink or ConflictLink] links: The conflicts and obstructions in the graph.
+    :param list[ObstructionLink or ConflictLink or ResolutionLink] links: The conflicts, obstructions, and resolutions in the graph.
     """
     output = diagram_startup()
 
+    v = set()
+
     for goal in goals:
-        output += goal.to_tree()
+        output += goal.to_tree(v)
 
     if links is None:
         links = []
 
     for link in links:
+        if type(link) == ObstructionLink:
+            output += link.obstacle.to_tree(v)
+        elif type(link) == ResolutionLink:
+            output += link.goal.to_tree(v)
+
         output += link.to_string()
         output += "\n"
 
